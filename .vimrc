@@ -105,9 +105,9 @@ nnoremap <C-p> :FZF<CR>
 function GitHubBlame()
     let line_number = line(".")
     let file_path = @%
-    let base_dir = substitute(system('basename $PWD'), '\n', '', 'g')
-    let url = 'https://github.com/Thermondo/'
-    let full_url = url . base_dir . '/blame/master/' . file_path . '#L' . line_number
+    let remote = substitute(system('git config --get remote.origin.url'), '\n', '', 'g')
+    let url = 'https://github.com/' . substitute(remote, 'git@github\.com:', '', 'g')
+    let full_url = substitute(url, '\.git', '', 'g') . '/blame/master/' . file_path . '#L' . line_number
     call system('chromium ' . full_url)
     echom 'opening ' . full_url
 endfunction
