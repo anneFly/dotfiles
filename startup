@@ -1,0 +1,33 @@
+#!/bin/sh
+
+init_dir() {
+    WORKING_DIR="~/projects/$1"
+
+    tmux send-keys "cd $WORKING_DIR" C-m
+    tmux send-keys "source ~/.virtualenvs/$1/bin/activate" C-m
+
+    tmux send-keys "test -f $WORKING_DIR/.env && source .env" C-m
+    tmux send-keys "test -f $WORKING_DIR/.nvmrc && nvm use" C-m
+}
+
+tmux new-session -s "$1" -d
+tmux rename-window main
+
+tmux select-window -t "$1":main
+init_dir "$@"
+
+tmux split-window -h -t "$1":main
+tmux select-pane -t "$1":main.1
+init_dir "$@"
+
+tmux split-window -v -t "$1":main.0
+tmux select-pane -t "$1":main.1
+init_dir "$@"
+
+tmux new-window -t "$1" -n edit
+tmux select-window -t "$1":edit
+init_dir "$@"
+tmux send-keys 'ctags -R ./**/*.py ~/.virtualenvs/$(basename $PWD)/lib/python3.9/site-packages/**/*.py' C-m
+tmux send-keys "vim" C-m
+
+tmux attach -t "$1"
