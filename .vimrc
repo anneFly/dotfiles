@@ -70,6 +70,10 @@ autocmd FileType python                     :iabbrev pdb import pdb; pdb.set_tra
 autocmd FileType javascript,javascriptreact,typescript,typescriptreact      setl tabstop=2 softtabstop=2 shiftwidth=2
 autocmd FileType html,htmldjango            setl tabstop=2 softtabstop=2 shiftwidth=2
 
+" python indentation
+let g:pyindent_open_paren = 'shiftwidth()'
+let g:pyindent_continue = 'shiftwidth()'
+
 " NERDTree
 "autocmd BufWinEnter * silent NERDTreeMirror
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
