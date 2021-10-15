@@ -6,6 +6,7 @@ set number
 set cursorline
 set hlsearch
 set smartcase
+set ignorecase
 
 set tabstop=4
 set softtabstop=4
@@ -95,14 +96,15 @@ let g:ale_fix_on_save = 1
 set rtp+=/usr/bin/fzf
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
 " https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+function! RipgrepFzf(query, fullscreen, smartcase)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always ' . a:smartcase . ' -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0, '--smart-case')
+command! -nargs=* -bang RGC call RipgrepFzf(<q-args>, <bang>0, '')
 nnoremap <C-p> :FZF<CR>
 
 " open blame on github
