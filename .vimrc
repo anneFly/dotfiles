@@ -53,6 +53,9 @@ set showmatch
 " clipboard support is only available with installing gvim on Arch
 set clipboard=unnamedplus
 
+set splitright
+set splitbelow
+
 syntax on
 set t_Co=256
 colorscheme onehalflight
