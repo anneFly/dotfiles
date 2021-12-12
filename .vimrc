@@ -58,6 +58,7 @@ set splitbelow
 
 syntax on
 set t_Co=256
+" https://github.com/sonph/onehalf/blob/master/vim/colors/onehalflight.vim
 colorscheme onehalflight
 
 filetype on
@@ -77,6 +78,11 @@ autocmd FileType html,htmldjango            setl tabstop=2 softtabstop=2 shiftwi
 " python indentation
 let g:pyindent_open_paren = 'shiftwidth()'
 let g:pyindent_continue = 'shiftwidth()'
+
+" Plugins
+" https://github.com/dense-analysis/ale
+" https://github.com/junegunn/fzf.vim
+" https://github.com/preservim/nerdtree
 
 " NERDTree
 "autocmd BufWinEnter * silent NERDTreeMirror
