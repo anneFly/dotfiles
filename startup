@@ -27,7 +27,7 @@ init_dir "$@"
 tmux new-window -t "$1" -n edit
 tmux select-window -t "$1":edit
 init_dir "$@"
-tmux send-keys 'ctags -R ./**/*.py ~/.virtualenvs/$(basename $PWD)/lib/python3.9/site-packages/**/*.py' C-m
+tmux send-keys 'ctags -R ./**/*.py ~/.virtualenvs/$(basename $PWD)/lib/python$(python --version | cut -d " " -f 2 | cut -d "." -f 1,2)/site-packages/**/*.py' C-m
 tmux send-keys "vim" C-m
 
 tmux attach -t "$1"
