@@ -37,12 +37,30 @@ vim.cmd.filetype 'plugin on'
 vim.cmd.filetype 'indent on'
 
 vim.api.nvim_create_autocmd('FileType', {pattern = 'python', command = 'setl colorcolumn=99'})
+vim.api.nvim_create_autocmd('FileType', {pattern = 'python', command = ':iabbrev pdb import pdb; pdb.set_trace()'})
 vim.api.nvim_create_autocmd('FileType', {pattern = 'javascript,javascriptreact,typescript,typescriptreact', command = 'setl tabstop=2 softtabstop=2 shiftwidth=2'})
 vim.api.nvim_create_autocmd('FileType', {pattern = 'html,htmldjango', command = 'setl tabstop=2 softtabstop=2 shiftwidth=2'})
 
 -- python indentation
 vim.g.pyindent_open_paren = 'shiftwidth()'
 vim.g.pyindent_continue = 'shiftwidth()'
+
+-- diagnostics
+vim.diagnostic.config({
+  virtual_text = true,
+  update_in_insert = false,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = true,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  }
+})
+vim.keymap.set('n', '<space>e', ':lua vim.diagnostic.open_float(0, {scope="line"})<CR>')
 
 -- Plug
 local Plug = vim.fn['plug#']
@@ -51,9 +69,12 @@ Plug 'nvim-lua/plenary.nvim'
 Plug('nvim-telescope/telescope.nvim', {tag = '0.1.8'})
 Plug 'preservim/nerdtree'
 Plug 'neovim/nvim-lspconfig'
+Plug ('FabijanZulj/blame.nvim', {opts = {blame_options = {'-w'}}})
+Plug 'prettier/vim-prettier'
 vim.call('plug#end')
 
 -- nerdtree
+vim.g.NERDTreeShowHidden = 1
 vim.keymap.set('n', '<C-n>', ':NERDTreeToggle<CR>')
 
 -- telescope
@@ -81,11 +102,39 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command(
   'RGG',
   function(opts)
-    print(opts.fargs)
     builtin.live_grep({glob_pattern = opts.fargs[1]})
   end,
   {nargs = 1}
 )
+
+-- git blame
+local blame = require('blame')
+blame.setup({
+    date_format = "%d.%m.%Y",
+    virtual_style = "right_align",
+    views = {
+        window = window_view,
+        virtual = virtual_view,
+        default = window_view,
+    },
+    focus_blame = true,
+    merge_consecutive = false,
+    max_summary_width = 30,
+    colors = nil,
+    blame_options = nil,
+    commit_detail_view = "vsplit",
+    --format_fn = blame.formats.commit_date_author_fn,
+    mappings = {
+        commit_info = "i",
+        stack_push = "<TAB>",
+        stack_pop = "<BS>",
+        show_commit = "<CR>",
+        close = { "<esc>", "q" },
+    }
+})
+
+vim.keymap.set('n', 'xx', ':BlameToggle<CR>')
+
 
 -- lspconfig
 local lsp_formatting = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -96,6 +145,7 @@ end
 -- pip install python-lsp-server
 -- pip install python-lsp-ruff
 -- pip install pylsp-mypy
+
 require'lspconfig'.pylsp.setup{
   on_attach = on_attach,
   settings = {
@@ -115,11 +165,17 @@ require'lspconfig'.pylsp.setup{
           enabled = false
         },
         pycodestyle = {
-          enabled = false
-          --ignore = {'W503', 'E701', 'E704', 'E203'},
-          --maxLineLength = 100
+          enabled = false,
         }
       }
     }
   }
 }
+
+-- npm install -g typescript typescript-language-server
+require'lspconfig'.ts_ls.setup({})
+
+-- vim-prettier
+vim.api.nvim_set_var('prettier#autoformat', 1)
+vim.api.nvim_set_var('prettier#autoformat_require_pragma', 0)
+
