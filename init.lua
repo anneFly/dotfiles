@@ -176,6 +176,7 @@ require'lspconfig'.pylsp.setup{
 require'lspconfig'.ts_ls.setup({})
 
 -- vim-prettier
-vim.api.nvim_set_var('prettier#autoformat', 1)
-vim.api.nvim_set_var('prettier#autoformat_require_pragma', 0)
+vim.api.nvim_set_var('prettier#autoformat', 0)
+-- run Prettier only on defined file types:
+vim.api.nvim_create_autocmd('BufWritePre',	{ group = Prettier, pattern = {"*.js", "*.jsx", "*.mjs", "*.cjs", "*.ts", "*.tsx", "*.css", "*.less", "*.scss", "*.json", "*.graphql", "*.gql", "*.vue", "*.svelte"}, buffer = bufnr, callback = function() vim.call('prettier#Prettier') end })
 
