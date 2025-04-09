@@ -71,6 +71,7 @@ Plug 'preservim/nerdtree'
 Plug 'neovim/nvim-lspconfig'
 Plug ('FabijanZulj/blame.nvim', {opts = {blame_options = {'-w'}}})
 Plug 'prettier/vim-prettier'
+Plug 'github/copilot.vim'
 vim.call('plug#end')
 
 -- nerdtree
@@ -175,8 +176,14 @@ require'lspconfig'.pylsp.setup{
 -- npm install -g typescript typescript-language-server
 require'lspconfig'.ts_ls.setup({})
 
+-- spell checker
+require'lspconfig'.harper_ls.setup({})
+
 -- vim-prettier
 vim.api.nvim_set_var('prettier#autoformat', 0)
 -- run Prettier only on defined file types:
 vim.api.nvim_create_autocmd('BufWritePre',	{ group = Prettier, pattern = {"*.js", "*.jsx", "*.mjs", "*.cjs", "*.ts", "*.tsx", "*.css", "*.less", "*.scss", "*.json", "*.graphql", "*.gql", "*.vue", "*.svelte"}, buffer = bufnr, callback = function() vim.call('prettier#Prettier') end })
 
+-- copilot
+vim.keymap.set('i', '<C-l>', '<Plug>(copilot-next)')
+vim.keymap.set('i', '<C-L>', '<Plug>(copilot-previous)')
