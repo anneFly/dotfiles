@@ -147,16 +147,24 @@ require'lspconfig'.pylsp.setup{
 require'lspconfig'.ts_ls.setup({})
 
 -- spell checker
-require'lspconfig'.harper_ls.setup({})
+require('lspconfig').harper_ls.setup {
+  settings = {
+    ["harper-ls"] = {
+      linters = {
+        SentenceCapitalization = false,
+      },
+    }
+  }
+}
 
 -- vim-prettier
 vim.api.nvim_set_var('prettier#autoformat', 0)
--- run Prettier only on defined file types:
+-- run Prettier only on defined filetypes:
 vim.api.nvim_create_autocmd('BufWritePre',	{ group = Prettier, pattern = {"*.js", "*.jsx", "*.mjs", "*.cjs", "*.ts", "*.tsx", "*.css", "*.less", "*.scss", "*.json", "*.graphql", "*.gql", "*.vue", "*.svelte"}, buffer = bufnr, callback = function() vim.call('prettier#Prettier') end })
 
 -- copilot
 vim.keymap.set('i', '<C-l>', '<Plug>(copilot-next)')
 vim.keymap.set('i', '<C-L>', '<Plug>(copilot-previous)')
 
--- github blame
+-- GitHub blame
 require('utils.github')
