@@ -69,7 +69,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug('nvim-telescope/telescope.nvim', {tag = '0.1.8'})
 Plug 'preservim/nerdtree'
 Plug 'neovim/nvim-lspconfig'
-Plug ('FabijanZulj/blame.nvim', {opts = {blame_options = {'-w'}}})
 Plug 'prettier/vim-prettier'
 Plug 'github/copilot.vim'
 vim.call('plug#end')
@@ -107,35 +106,6 @@ vim.api.nvim_create_user_command(
   end,
   {nargs = 1}
 )
-
--- git blame
-local blame = require('blame')
-blame.setup({
-    date_format = "%d.%m.%Y",
-    virtual_style = "right_align",
-    views = {
-        window = window_view,
-        virtual = virtual_view,
-        default = window_view,
-    },
-    focus_blame = true,
-    merge_consecutive = false,
-    max_summary_width = 30,
-    colors = nil,
-    blame_options = nil,
-    commit_detail_view = "vsplit",
-    --format_fn = blame.formats.commit_date_author_fn,
-    mappings = {
-        commit_info = "i",
-        stack_push = "<TAB>",
-        stack_pop = "<BS>",
-        show_commit = "<CR>",
-        close = { "<esc>", "q" },
-    }
-})
-
-vim.keymap.set('n', 'xx', ':BlameToggle<CR>')
-
 
 -- lspconfig
 local lsp_formatting = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -187,3 +157,6 @@ vim.api.nvim_create_autocmd('BufWritePre',	{ group = Prettier, pattern = {"*.js"
 -- copilot
 vim.keymap.set('i', '<C-l>', '<Plug>(copilot-next)')
 vim.keymap.set('i', '<C-L>', '<Plug>(copilot-previous)')
+
+-- github blame
+require('utils.github')

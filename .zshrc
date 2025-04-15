@@ -103,6 +103,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+
 ### pyenv ###
 # export PYENV_ROOT="$HOME/.pyenv"
 # export PATH="$PYENV_ROOT/bin:$PATH"
@@ -113,5 +114,11 @@ source $ZSH/oh-my-zsh.sh
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+### Editor ###
+export EDITOR=vim
+
 ### BAT ###
 export BAT_THEME="OneHalfLight"
+
+### ssh-agent / gnome-keyring ###
+# export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
