@@ -168,3 +168,6 @@ vim.keymap.set('i', '<C-L>', '<Plug>(copilot-previous)')
 
 -- GitHub blame
 require('utils.github')
+
+-- Harper utils
+require('utils.harper')
