@@ -65,12 +65,14 @@ vim.keymap.set('n', '<space>e', ':lua vim.diagnostic.open_float(0, {scope="line"
 -- Plug
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
+--Plug 'williamboman/mason.nvim'
+--Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug('nvim-telescope/telescope.nvim', {tag = '0.1.8'})
 Plug 'preservim/nerdtree'
 Plug 'neovim/nvim-lspconfig'
 Plug 'prettier/vim-prettier'
-Plug 'github/copilot.vim'
+Plug 'zbirenbaum/copilot.lua'
 vim.call('plug#end')
 
 -- nerdtree
@@ -108,54 +110,7 @@ vim.api.nvim_create_user_command(
 )
 
 -- lspconfig
-local lsp_formatting = vim.api.nvim_create_augroup("LspFormatting", {})
-local on_attach = function(_, bufnr)
-	vim.api.nvim_create_autocmd('BufWritePre',	{ group = lsp_formatting, buffer = bufnr, callback = function() vim.lsp.buf.format() end })
-end
-
--- pip install python-lsp-server
--- pip install python-lsp-ruff
--- pip install pylsp-mypy
-
-require'lspconfig'.pylsp.setup{
-  on_attach = on_attach,
-  settings = {
-    pylsp = {
-      plugins = {
-        pylsp_mypy = {
-          enabled = true,
-          live_mode = false,
-          dmypy = true,
-          report_progress = true
-        },
-        ruff = {
-          enabled = true,
-          formatEnabled = true
-        },
-        pyflakes = {
-          enabled = false
-        },
-        pycodestyle = {
-          enabled = false,
-        }
-      }
-    }
-  }
-}
-
--- npm install -g typescript typescript-language-server
-require'lspconfig'.ts_ls.setup({})
-
--- spell checker
-require('lspconfig').harper_ls.setup {
-  settings = {
-    ["harper-ls"] = {
-      linters = {
-        SentenceCapitalization = false,
-      },
-    }
-  }
-}
+require('lsp')
 
 -- vim-prettier
 vim.api.nvim_set_var('prettier#autoformat', 0)
@@ -163,8 +118,22 @@ vim.api.nvim_set_var('prettier#autoformat', 0)
 vim.api.nvim_create_autocmd('BufWritePre',	{ group = Prettier, pattern = {"*.js", "*.jsx", "*.mjs", "*.cjs", "*.ts", "*.tsx", "*.css", "*.less", "*.scss", "*.json", "*.graphql", "*.gql", "*.vue", "*.svelte"}, buffer = bufnr, callback = function() vim.call('prettier#Prettier') end })
 
 -- copilot
-vim.keymap.set('i', '<C-l>', '<Plug>(copilot-next)')
-vim.keymap.set('i', '<C-L>', '<Plug>(copilot-previous)')
+require('copilot').setup({
+  panel = { enabled = false },
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+    keymap = {
+      accept = '<C-y>',
+      next = '<C-l>',
+      prev = '<C-L>',
+      dismiss = '<C-]>',
+    },
+  },
+  filetypes = {
+    ['*'] = true,
+  },
+})
 
 -- GitHub blame
 require('utils.github')
